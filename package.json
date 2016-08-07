@@ -1,0 +1,19 @@
+{
+  "name": "bookeve-api",
+  "version": "1.0.0",
+  "keywords": [
+    "util",
+    "functional",
+    "server",
+    "client",
+    "browser"
+  ],
+  "author": "felipejorge",
+  "contributors": [],
+  "dependencies": {
+    "body-parser": "^1.15.0",
+    "express": "^4.13.4",
+    "mysql": "^2.11.1",
+    "sequelize": "^3.23.6"
+  }
+}
