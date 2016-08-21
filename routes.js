@@ -1,7 +1,8 @@
-module.exports = function (models) {
+module.exports = function (sequelize, models) {
     var routes = {
-        Users: require(__dirname + '/routes/Users.js')(models),
-        Contents: require(__dirname + '/routes/Contents.js')(models),
+        users: require(__dirname + '/routes/Users.js')(sequelize, models),
+        contents: require(__dirname + '/routes/Contents.js')(sequelize, models),
+        events: require(__dirname + '/routes/Events.js')(sequelize, models),
     }
     return routes;
 }

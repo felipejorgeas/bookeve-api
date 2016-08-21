@@ -24,14 +24,15 @@ module.exports = function (dbData, Sequelize) {
                 Users.sync();
                 Events.sync();
                 Contents.sync();
+
+                Users.belongsToMany(Events, {through: EventsUsers, foreignKey: 'userId', targetKey: 'id'});
+                Events.belongsToMany(Users, {through: EventsUsers, foreignKey: 'eventId', targetKey: 'id'});
+
+                Contents.belongsToMany(Events, {through: EventsContents, foreignKey: 'contentId', targetKey: 'id'});
+                Events.belongsToMany(Contents, {through: EventsContents, foreignKey: 'eventId', targetKey: 'id'});
+
                 EventsUsers.sync();
                 EventsContents.sync();
-
-                Events.belongsToMany(Users, {through: EventsUsers, foreignKey: 'eventId', targetKey: 'id'});
-                Users.belongsToMany(Events, {through: EventsUsers, foreignKey: 'userId', targetKey: 'id'});
-
-                Events.belongsToMany(Contents, {through: EventsContents, foreignKey: 'eventId', targetKey: 'id'});
-                Contents.belongsToMany(Events, {through: EventsContents, foreignKey: 'contentId', targetKey: 'id'});
 
                 db.models = {
                     Users: Users,

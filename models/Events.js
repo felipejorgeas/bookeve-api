@@ -1,4 +1,4 @@
-module.exports = function(sequelize, DataTypes) {
+module.exports = function (sequelize, DataTypes) {
     return sequelize.define("Events", {
         id: {
             type: DataTypes.INTEGER,
@@ -13,6 +13,11 @@ module.exports = function(sequelize, DataTypes) {
         description: {
             type: DataTypes.TEXT,
             allowNull: false
+        },
+        banner: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            defaultValue: ''
         },
         dateIni: {
             type: DataTypes.DATE,
@@ -70,6 +75,18 @@ module.exports = function(sequelize, DataTypes) {
             defaultValue: 0
         },
     }, {
-        tableName: 'events'
+        tableName: 'events',
+        scopes: {
+            eventsActive: {
+                where: {
+                    active: 1
+                }
+            },
+            eventsInactive: {
+                where: {
+                    active: 0
+                }
+            }
+        }
     });
 };

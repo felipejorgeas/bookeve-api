@@ -14,8 +14,8 @@ module.exports = function(models){
                     where: {
                         id: id
                     }
-                }).then(function(contents){
-                    res.send(contents);
+                }).then(function(content){
+                    res.send(content);
                 });
             }
         }
