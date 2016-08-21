@@ -74,9 +74,19 @@ module.exports = function (sequelize, DataTypes) {
             allowNull: false,
             defaultValue: 0
         },
+        deleted: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            defaultValue: 0
+        }
     }, {
         tableName: 'events',
         scopes: {
+            eventsOk: {
+                where: {
+                    deleted: 0
+                }
+            },
             eventsActive: {
                 where: {
                     active: 1

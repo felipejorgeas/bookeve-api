@@ -1,4 +1,4 @@
-module.exports = function(sequelize, DataTypes) {
+module.exports = function (sequelize, DataTypes) {
     return sequelize.define("Users", {
         id: {
             type: DataTypes.INTEGER,
@@ -61,7 +61,7 @@ module.exports = function(sequelize, DataTypes) {
             allowNull: false,
             defaultValue: 'participante'
         },
-        pswd:{
+        pswd: {
             type: DataTypes.STRING,
             allowNull: false,
             defaultValue: ''
@@ -71,7 +71,19 @@ module.exports = function(sequelize, DataTypes) {
             allowNull: false,
             defaultValue: 1
         },
+        deleted: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            defaultValue: 0
+        }
     }, {
-        tableName: 'users'
+        tableName: 'users',
+        scopes: {
+            usersOk: {
+                where: {
+                    deleted: 0
+                }
+            }
+        }
     });
 };

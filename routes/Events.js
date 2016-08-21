@@ -1,4 +1,4 @@
-module.exports = function (models) {
+module.exports = function (sequelize, models, Utils) {
     var Events = {
         insert: function (req, res) {
             var event = req.body.event;

@@ -1,4 +1,4 @@
-module.exports = function(sequelize, DataTypes) {
+module.exports = function (sequelize, DataTypes) {
     return sequelize.define("Contents", {
         id: {
             type: DataTypes.INTEGER,
@@ -19,7 +19,19 @@ module.exports = function(sequelize, DataTypes) {
             allowNull: false,
             defaultValue: 1
         },
+        deleted: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            defaultValue: 0
+        }
     }, {
-        tableName: 'contents'
+        tableName: 'contents',
+        scopes: {
+            contentsOk: {
+                where: {
+                    deleted: 0
+                }
+            }
+        }
     });
 };
