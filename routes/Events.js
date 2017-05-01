@@ -7,8 +7,19 @@ module.exports = function (sequelize, models, Utils) {
             });
         },
         get: function (req, res) {
-            models.Events.scope('eventsActive').findAll().then(function (events) {
-                res.send(events);
+            var queryString = req.query;
+            console.log(queryString);
+            var where = {
+                where: (queryString ? queryString : {})
+            };
+            models.Events.scope('eventsActive').findAll(where).then(function (result) {
+                if (result) {
+                    res.send(Utils.setResponse(200, result));
+                } else {
+                    res.send(Utils.setResponse(201));
+                }
+            }).catch(function (err) {
+                res.send(Utils.setResponse(err));
             });
         },
         getOne: function (req, res) {
