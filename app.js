@@ -44,6 +44,7 @@ conn.connect(function (db) {
         app.get(api + '/events', routes.events.get);
         app.get(api + '/events/:id', routes.events.getOne);
         app.post(api + '/events', routes.events.insert);
+        app.delete(api + '/events/:id', routes.events.remove);
 
         app.listen('5555', function () {
             console.log('Servidor escutando na porta 5555.');
