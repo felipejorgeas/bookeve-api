@@ -46,6 +46,12 @@ conn.connect(function (db) {
         app.post(api + '/events', routes.events.insert);
         app.delete(api + '/events/:id', routes.events.remove);
 
+        /**
+         * Rotas para videos de eventos.
+         */
+        app.post(api + '/eventsVideos', routes.eventsVideos.insert);
+        app.delete(api + '/eventsVideos/:id', routes.eventsVideos.remove);
+
         app.listen('5555', function () {
             console.log('Servidor escutando na porta 5555.');
         });

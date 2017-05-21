@@ -8,13 +8,12 @@ module.exports = function (sequelize, models, Utils) {
         },
         get: function (req, res) {
             var queryString = req.query;
-            console.log(queryString);
             var where = {
                 where: (queryString ? queryString : {})
             };
-            models.Events.scope('eventsActive').findAll(where).then(function (result) {
-                if (result) {
-                    res.send(Utils.setResponse(200, result));
+            models.Events.scope('eventsActive').findAll(where).then(function (eventos) {
+                if (eventos) {
+                    res.send(Utils.setResponse(200, eventos));
                 } else {
                     res.send(Utils.setResponse(201));
                 }
@@ -24,15 +23,26 @@ module.exports = function (sequelize, models, Utils) {
         },
         getOne: function (req, res) {
             var params = req.params;
-            var event = {
-                id: params.id
+            var where = {
+                where: {
+                    id: params.id
+                }
             };
-            models.Events.scope('eventsOk').findOne({
-                where: event
-            }).then(function (result) {
-                if (result) {
-                    var data = result.dataValues;
-                    res.send(Utils.setResponse(200, data));
+            models.Events.scope('eventsOk').findOne(where).then(function (evento) {
+                if (evento) {
+                    evento = evento.dataValues;
+                    // Busca os videos do evento
+                    var where = {
+                        where: {
+                            eventId: evento.id
+                        }
+                    };
+                    models.EventsVideos.findAll(where).then(function (videos) {
+                        if (videos) {
+                            evento.videos = videos;
+                        }
+                        res.send(Utils.setResponse(200, evento));
+                    });
                 } else {
                     throw 'Evento não encontrado!';
                 }
@@ -51,12 +61,12 @@ module.exports = function (sequelize, models, Utils) {
             var update = {
                 deleted: 1
             };
-            models.Events.scope('eventsOk').findOne(where).then(function (data) {
-                if (data) {
+            models.Events.scope('eventsOk').findOne(where).then(function (evento) {
+                if (evento) {
                     models.Events.update(update, where).then(function (result) {
                         if (result) {
-                            models.Events.findOne(where).then(function (data) {
-                                res.send(Utils.setResponse(200, data));
+                            models.Events.findOne(where).then(function (evento) {
+                                res.send(Utils.setResponse(200, evento));
                             });
                         } else {
                             throw 'Não foi possível excluir o evento!';

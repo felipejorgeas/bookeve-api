@@ -547,8 +547,8 @@ module.exports = {
                 response.status = 0;
                 response.message = error;
         }
-        console.log('');
-        console.log(response);
+        /*console.log('');
+        console.log(response);*/
         return response;
     }
 };
