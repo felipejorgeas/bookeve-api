@@ -26,9 +26,9 @@ module.exports = function (sequelize, DataTypes) {
             defaultValue: ''
         },
         number: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING,
             allowNull: false,
-            defaultValue: 0
+            defaultValue: ''
         },
         complement: {
             type: DataTypes.STRING,
@@ -41,14 +41,14 @@ module.exports = function (sequelize, DataTypes) {
             defaultValue: ''
         },
         city: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING,
             allowNull: false,
-            defaultValue: 0
+            defaultValue: ''
         },
         state: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING,
             allowNull: false,
-            defaultValue: 0
+            defaultValue: ''
         },
         zip: {
             type: DataTypes.INTEGER,

@@ -7,17 +7,14 @@ module.exports = function (sequelize, models, Utils) {
                 item.eventId = eventId;
                 return item;
             });
-            console.log(videos);
-            models.EventsVideos.bulkCreate(videos).then(function (videos) {
-                console.log(videos);
-                if (videos) {
-                    res.send(Utils.setResponse(200, videos));
-                } else {
-                    res.send(Utils.setResponse(201));
-                }
-            }).catch(function (err) {
+            models.EventsVideos.saveVideos(videos, EventsVideos.insertCallback, res);
+        },
+        insertCallback: function(data, res, err){
+            if(err){
                 res.send(Utils.setResponse(err));
-            });
+            } else {
+                res.send(Utils.setResponse(200, data));
+            }
         },
         remove: function (req, res) {
             var params = req.params;

@@ -10,7 +10,7 @@ module.exports = function (dbData, Sequelize) {
                 host: dbData.host,
                 dialect: 'mysql',
                 timestamps: true,
-                logging: false
+                logging: true
             });
             sequelize.authenticate()
                 .then(function (err) {
