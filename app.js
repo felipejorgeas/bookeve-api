@@ -1,10 +1,11 @@
 var express = require('express')
-        , bodyParser = require('body-parser')
-        , Sequelize = require('sequelize')
-        , async = require('async')
-        , dbData = require(__dirname + '/config/db_data.js')
-        , Utils = require(__dirname + '/libs/utils.js')
-        , conn = require(__dirname + '/db.js')(dbData, Sequelize);
+    , bodyParser = require('body-parser')
+    , compression = require('compression')
+    , Sequelize = require('sequelize')
+    , async = require('async')
+    , dbData = require(__dirname + '/config/db_data.js')
+    , Utils = require(__dirname + '/libs/utils.js')
+    , conn = require(__dirname + '/db.js')(dbData, Sequelize);
 
 var app = express();
 var api = '/bookeve-api';
@@ -15,7 +16,11 @@ conn.connect(function (db) {
     } else {
         var routes = require(__dirname + '/routes.js')(db.sequelize, db.models, Utils, async);
 
-        app.use(bodyParser.json());
+        app.use(bodyParser.urlencoded({ extended: true }));
+        app.use(bodyParser.json({limit: '50mb'}));
+        app.use(bodyParser());
+        app.use(compression());
+        app.use(api + '/banners', express.static(__dirname + '/banners'));
         app.use(function (req, res, next) {
             res.header('Access-Control-Allow-Origin', '*');
             res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
