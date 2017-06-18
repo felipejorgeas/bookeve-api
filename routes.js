@@ -5,6 +5,7 @@ module.exports = function (sequelize, models, Utils, async) {
         events: require(__dirname + '/routes/Events.js')(sequelize, models, Utils, async),
         eventsVideos: require(__dirname + '/routes/EventsVideos.js')(sequelize, models, Utils),
         eventsLecturers: require(__dirname + '/routes/EventsLecturers.js')(sequelize, models, Utils),
+        eventsUsers: require(__dirname + '/routes/EventsUsers.js')(sequelize, models, Utils),
     };
     return routes;
 };

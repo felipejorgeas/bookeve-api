@@ -3,10 +3,14 @@ module.exports = function (sequelize, models, Utils, async) {
         evento: null,
         insert: function (req, res) {
             var event = req.body;
-            if (event.image.indexOf('png') !== false) {
-                event.banner = 'banner.png';
-            } else {
-                event.banner = 'banner.jpg';
+            event.dateIni = new Date(event.dateIni);
+            event.dateFin = new Date(event.dateFin);
+            if (event.image) {
+                if (event.image.indexOf('png') !== false) {
+                    event.banner = 'banner.png';
+                } else {
+                    event.banner = 'banner.jpg';
+                }
             }
             if (!event.lecturers) {
                 event.lecturers = [];
@@ -83,11 +87,14 @@ module.exports = function (sequelize, models, Utils, async) {
             var where = {
                 where: event
             };
-            console.log(dataUpdate.image.indexOf('png'));
-            if (dataUpdate.image.indexOf('png') != -1) {
-                dataUpdate.banner = 'banner.png';
-            } else {
-                dataUpdate.banner = 'banner.jpg';
+            dataUpdate.dateIni = new Date(dataUpdate.dateIni);
+            dataUpdate.dateFin = new Date(dataUpdate.dateFin);
+            if (dataUpdate.image) {
+                if (dataUpdate.image.indexOf('png') != -1) {
+                    dataUpdate.banner = 'banner.png';
+                } else {
+                    dataUpdate.banner = 'banner.jpg';
+                }
             }
             var update = dataUpdate;
             models.Events.findOne(where).then(function (data) {
@@ -141,9 +148,11 @@ module.exports = function (sequelize, models, Utils, async) {
                     evento = evento.dataValues;
                     Events.evento = evento;
                     async.parallel({
+                        organizer: Events.getEventOrganizer,
                         lecturers: Events.getEventLecturers,
                         videos: Events.getEventVideos
                     }, function (err, result) {
+                        evento.organizer = result.organizer;
                         evento.lecturers = result.lecturers;
                         evento.videos = result.videos;
                         res.send(Utils.setResponse(200, evento));
@@ -153,6 +162,20 @@ module.exports = function (sequelize, models, Utils, async) {
                 }
             }).catch(function (err) {
                 res.send(Utils.setResponse(err));
+            });
+        },
+        getEventOrganizer: function (callback) {
+            var where = {
+                where: {
+                    id: Events.evento.userId
+                }
+            };
+            models.Users.findOne(where).then(function (user) {
+                var organizador = {
+                    name: user.name,
+                    email: user.email
+                };
+                callback(null, organizador);
             });
         },
         getEventLecturers: function (callback) {

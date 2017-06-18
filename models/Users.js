@@ -10,6 +10,12 @@ module.exports = function (sequelize, DataTypes) {
             allowNull: false,
             defaultValue: ''
         },
+        gender: {
+            type: DataTypes.ENUM,
+            values: ['', 'masculino', 'feminino'],
+            allowNull: false,
+            defaultValue: ''
+        },
         email: {
             type: DataTypes.STRING,
             allowNull: false,

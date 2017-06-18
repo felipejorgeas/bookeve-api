@@ -16,9 +16,8 @@ conn.connect(function (db) {
     } else {
         var routes = require(__dirname + '/routes.js')(db.sequelize, db.models, Utils, async);
 
+        app.use(bodyParser.json({ limit: '50mb' }));
         app.use(bodyParser.urlencoded({ extended: true }));
-        app.use(bodyParser.json({limit: '50mb'}));
-        app.use(bodyParser());
         app.use(compression());
         app.use(api + '/banners', express.static(__dirname + '/banners'));
         app.use(function (req, res, next) {
@@ -64,6 +63,15 @@ conn.connect(function (db) {
          */
         app.post(api + '/eventsVideos', routes.eventsVideos.insert);
         app.delete(api + '/eventsVideos/:id', routes.eventsVideos.remove);
+
+        /**
+         * Rotas para participantes de eventos.
+         */
+        app.get(api + '/eventsUsers', routes.eventsUsers.getAll);
+        app.get(api + '/eventsUsers/:id', routes.eventsUsers.getOne);
+        app.get(api + '/eventsUsers/event/:eventId/user/:userId', routes.eventsUsers.find);
+        app.post(api + '/eventsUsers', routes.eventsUsers.insert);
+        app.delete(api + '/eventsUsers/:id', routes.eventsUsers.remove);
 
         app.listen('5555', function () {
             console.log('Servidor escutando na porta 5555.');

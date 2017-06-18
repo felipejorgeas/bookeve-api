@@ -1,16 +1,16 @@
-module.exports = function(sequelize, DataTypes) {
+module.exports = function (sequelize, DataTypes) {
     return sequelize.define("EventsUsers", {
-        code: {
+        id: {
+            type: DataTypes.INTEGER,
+            primaryKey: true,
+            autoIncrement: true
+        },
+        deleted: {
             type: DataTypes.INTEGER,
             allowNull: false,
             defaultValue: 0
-        },
-        active: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            defaultValue: 1
-        },
+        }
     }, {
-        tableName: 'eventsUsers'
-    });
+            tableName: 'eventsUsers'
+        });
 };
