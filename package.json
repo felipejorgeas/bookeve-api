@@ -16,6 +16,7 @@
     "compression": "^1.6.2",
     "express": "^4.13.4",
     "mysql": "^2.11.1",
+    "nodemailer": "^4.0.1",
     "sequelize": "^3.23.6"
   }
 }

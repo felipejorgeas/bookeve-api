@@ -11,6 +11,8 @@ module.exports = function (sequelize, models, Utils) {
                 where: data
             };
             models.EventsUsers.findOne(where).then(function (inscricao) {
+                var message = '<p><b>Inscrição confirmada</b></p>';
+                var subject = 'Inscrição confirmada';
                 if (inscricao) {
                     var update = {
                         deleted: 0
@@ -18,6 +20,7 @@ module.exports = function (sequelize, models, Utils) {
                     models.EventsUsers.update(update, where).then(function (result) {
                         if (result) {
                             models.EventsUsers.findOne(where).then(function (inscricao) {
+                                Utils.sendMail('felipejorgeas@gmail.com', subject, message, null, null);
                                 res.send(Utils.setResponse(200, inscricao));
                             });
                         } else {
@@ -28,6 +31,7 @@ module.exports = function (sequelize, models, Utils) {
                     models.EventsUsers.create(data).then(function (result) {
                         var data = result.dataValues;
                         if (data) {
+                            Utils.sendMail('felipejorgeas@gmail.com', subject, message, null, null);
                             res.send(Utils.setResponse(200, data));
                         } else {
                             throw 'Não foi possível se inscrever neste evento';
@@ -54,6 +58,9 @@ module.exports = function (sequelize, models, Utils) {
                     models.EventsUsers.update(update, where).then(function (result) {
                         if (result) {
                             models.EventsUsers.findOne(where).then(function (inscricao) {
+                                var message = '<p><b>Inscrição cancelada</b></p>';
+                                var subject = 'Inscrição cancelada';
+                                Utils.sendMail('felipejorgeas@gmail.com', subject, message, null, null);
                                 res.send(Utils.setResponse(200, inscricao));
                             });
                         } else {

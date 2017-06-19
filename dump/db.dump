@@ -54,16 +54,16 @@ CREATE TABLE `events` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL DEFAULT '',
   `description` text NOT NULL,
-  `banner` varchar(255) NOT NULL DEFAULT '',
+  `banner` varchar(255) NOT NULL,
   `dateIni` datetime NOT NULL,
   `dateFin` datetime NOT NULL,
   `vacancies` int(11) NOT NULL DEFAULT '0',
   `address` varchar(255) NOT NULL DEFAULT '',
-  `number` int(11) NOT NULL DEFAULT '0',
+  `number` varchar(255) NOT NULL DEFAULT '',
   `complement` varchar(255) NOT NULL DEFAULT '',
   `neighborhood` varchar(255) NOT NULL DEFAULT '',
-  `city` int(11) NOT NULL DEFAULT '0',
-  `state` int(11) NOT NULL DEFAULT '0',
+  `city` varchar(255) NOT NULL DEFAULT '',
+  `state` varchar(255) NOT NULL DEFAULT '',
   `zip` int(11) NOT NULL DEFAULT '0',
   `active` int(11) NOT NULL DEFAULT '0',
   `deleted` int(11) NOT NULL DEFAULT '0',
@@ -73,7 +73,7 @@ CREATE TABLE `events` (
   PRIMARY KEY (`id`),
   KEY `userId` (`userId`),
   CONSTRAINT `events_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -82,7 +82,7 @@ CREATE TABLE `events` (
 
 LOCK TABLES `events` WRITE;
 /*!40000 ALTER TABLE `events` DISABLE KEYS */;
-INSERT INTO `events` VALUES (1,'Chatbots: o futuro dos apps','A tecnologia de chatbots vem crescendo bastante e já caiu no gosto da galera.','','2017-05-29 00:00:00','2017-05-31 00:00:00',40,'Avenida Barão Homem de Melo',239,'','Caiçaras',0,0,30180030,1,0,'2017-05-01 00:00:00','2017-05-01 00:00:00',1),(2,'Palestra sobre Startups','A tecnologia de chatbots vem crescendo bastante e já caiu no gosto da galera.','','2017-05-29 00:00:00','2017-05-31 00:00:00',40,'Avenida Barão Homem de Melo',239,'','Caiçaras',0,0,30180030,1,1,'2017-05-01 00:00:00','2017-05-14 01:14:00',1);
+INSERT INTO `events` VALUES (1,'asdf asdf a','asdasf asdf','banner.png','2017-05-28 15:00:00','2017-05-28 21:00:00',121,'Praça Raul Soares','89','apto 802','Centro','Belo Horizonte','MG',30180030,1,0,'2017-05-28 17:10:58','2017-06-18 23:37:16',1),(2,'Chatbots: o futuro dos apps.','O maior evento de chatbots do Brasil.','banner.jpg','2017-05-28 17:16:00','2017-05-28 17:16:00',100,'Praça Raul Soares','89','apto 802','Centro','Belo Horizonte','MG',30180030,1,0,'2017-05-28 17:16:37','2017-06-18 16:41:52',1),(27,'Varejo','54sa54das64d5a','banner.jpg','2017-05-28 18:59:31','2017-05-28 18:59:31',50,'Praça Raul Soares','89','','Centro','Belo Horizonte','MG',30180030,1,0,'2017-05-28 18:59:31','2017-05-29 03:35:29',1);
 /*!40000 ALTER TABLE `events` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -131,7 +131,7 @@ CREATE TABLE `eventsLecturers` (
   PRIMARY KEY (`id`),
   KEY `eventId` (`eventId`),
   CONSTRAINT `eventsLecturers_ibfk_1` FOREIGN KEY (`eventId`) REFERENCES `events` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -140,6 +140,7 @@ CREATE TABLE `eventsLecturers` (
 
 LOCK TABLES `eventsLecturers` WRITE;
 /*!40000 ALTER TABLE `eventsLecturers` DISABLE KEYS */;
+INSERT INTO `eventsLecturers` VALUES (10,'César','2017-05-28 18:17:05','2017-05-28 18:17:05',1),(11,'Paula da Silva','2017-05-28 18:17:47','2017-05-28 18:17:47',2),(12,'João Paulo','2017-05-28 18:17:55','2017-05-28 18:17:55',2),(13,'Felipe Jorge','2017-05-28 18:43:20','2017-05-28 18:43:20',NULL),(14,'Felipe Jorge','2017-05-28 18:44:10','2017-05-28 18:44:10',NULL),(15,'Felipe Jorge','2017-05-28 18:47:51','2017-05-28 18:47:51',NULL),(16,'Felipe Jorge','2017-05-28 18:48:09','2017-05-28 18:48:09',NULL),(17,'Felipe Jorge','2017-05-28 18:51:12','2017-05-28 18:51:12',NULL),(18,'Felipe Jorge','2017-05-28 18:51:34','2017-05-28 18:51:34',NULL),(19,'Felipe Jorge','2017-05-28 18:51:39','2017-05-28 18:51:39',NULL),(20,'Felipe Jorge','2017-05-28 18:56:07','2017-05-28 18:56:07',NULL),(21,'Felipe Jorge','2017-05-28 18:57:14','2017-05-28 18:57:14',NULL),(22,'Felipe Jorge','2017-05-28 18:58:21','2017-05-28 18:58:21',NULL),(23,'Paula','2017-06-18 23:37:06','2017-06-18 23:37:06',1);
 /*!40000 ALTER TABLE `eventsLecturers` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -151,17 +152,18 @@ DROP TABLE IF EXISTS `eventsUsers`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `eventsUsers` (
-  `code` int(11) NOT NULL DEFAULT '0',
-  `active` int(11) NOT NULL DEFAULT '1',
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `deleted` int(11) NOT NULL DEFAULT '0',
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL,
-  `userId` int(11) NOT NULL DEFAULT '0',
-  `eventId` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`userId`,`eventId`),
+  `userId` int(11) DEFAULT NULL,
+  `eventId` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `eventsUsers_eventId_userId_unique` (`userId`,`eventId`),
   KEY `eventId` (`eventId`),
   CONSTRAINT `eventsUsers_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `eventsUsers_ibfk_2` FOREIGN KEY (`eventId`) REFERENCES `events` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -170,6 +172,7 @@ CREATE TABLE `eventsUsers` (
 
 LOCK TABLES `eventsUsers` WRITE;
 /*!40000 ALTER TABLE `eventsUsers` DISABLE KEYS */;
+INSERT INTO `eventsUsers` VALUES (1,1,'2017-06-18 20:55:05','2017-06-18 23:26:33',1,2),(3,0,'2017-06-18 21:27:56','2017-06-18 21:27:56',1,1);
 /*!40000 ALTER TABLE `eventsUsers` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -189,7 +192,7 @@ CREATE TABLE `eventsVideos` (
   PRIMARY KEY (`id`),
   KEY `eventId` (`eventId`),
   CONSTRAINT `eventsVideos_ibfk_1` FOREIGN KEY (`eventId`) REFERENCES `events` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -198,7 +201,7 @@ CREATE TABLE `eventsVideos` (
 
 LOCK TABLES `eventsVideos` WRITE;
 /*!40000 ALTER TABLE `eventsVideos` DISABLE KEYS */;
-INSERT INTO `eventsVideos` VALUES (1,'https://www.youtube.com/watch?v=P5LmulyKrGQ','0000-00-00 00:00:00','0000-00-00 00:00:00',1),(6,'https://www.youtube.com/watch?v=mTUvfKgpDrA','2017-05-21 22:27:51','2017-05-21 22:27:51',1);
+INSERT INTO `eventsVideos` VALUES (1,'https://www.youtube.com/watch?v=LLbBdGn858Y','2017-05-28 17:39:33','2017-05-28 17:39:33',1),(2,'https://www.youtube.com/watch?v=LLbBdGn858Y','2017-05-28 18:18:03','2017-05-28 18:18:03',2),(3,'https://www.youtube.com/watch?v=cwvb5GMBOxQ','2017-05-28 18:18:10','2017-05-28 18:18:10',2),(4,'https://www.youtube.com/watch?v=LLbBdGn858Y','2017-05-28 18:48:09','2017-05-28 18:48:09',NULL),(5,'https://www.youtube.com/watch?v=cwvb5GMBOxQ','2017-05-28 18:51:34','2017-05-28 18:51:34',NULL);
 /*!40000 ALTER TABLE `eventsVideos` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -212,14 +215,15 @@ DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL DEFAULT '',
+  `gender` enum('','masculino','feminino') NOT NULL DEFAULT '',
   `email` varchar(255) NOT NULL DEFAULT '',
   `phone` varchar(255) NOT NULL DEFAULT '',
   `address` varchar(255) NOT NULL DEFAULT '',
-  `number` int(11) NOT NULL DEFAULT '0',
+  `number` varchar(255) NOT NULL DEFAULT '',
   `complement` varchar(255) NOT NULL DEFAULT '',
   `neighborhood` varchar(255) NOT NULL DEFAULT '',
-  `city` int(11) NOT NULL DEFAULT '0',
-  `state` int(11) NOT NULL DEFAULT '0',
+  `city` varchar(255) NOT NULL DEFAULT '',
+  `state` varchar(255) NOT NULL DEFAULT '',
   `zip` int(11) NOT NULL DEFAULT '0',
   `accessLevel` enum('administrador','organizador','participante') NOT NULL DEFAULT 'participante',
   `pswd` varchar(255) NOT NULL DEFAULT '',
@@ -237,7 +241,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'Felipe Jorge Alves dos Santos','felipejorgeas@gmail.com','31993586504','Praça Raul Soares',89,'apto 802','Centro',0,0,30180030,'administrador','7e04da88cbb8cc933c7b89fbfe121cca',1,0,'2017-05-01 14:07:09','2017-05-14 00:30:02');
+INSERT INTO `users` VALUES (1,'Felipe Jorge','masculino','felipejorgeas@gmail.com','31993586504','Praça Raul Soares','89','apto 802','Centro','Belo Horizonte','MG',30180030,'participante','6c44e5cd17f0019c64b042e4a745412a',1,0,'2017-06-18 15:48:05','2017-06-18 15:49:20');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -250,4 +254,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-05-21 20:08:21
+-- Dump completed on 2017-06-19  0:39:28

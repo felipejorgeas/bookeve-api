@@ -3,8 +3,9 @@ var express = require('express')
     , compression = require('compression')
     , Sequelize = require('sequelize')
     , async = require('async')
+    , nodemailer = require('nodemailer')
     , dbData = require(__dirname + '/config/db_data.js')
-    , Utils = require(__dirname + '/libs/utils.js')
+    , Utils = require(__dirname + '/libs/utils.js')(nodemailer)
     , conn = require(__dirname + '/db.js')(dbData, Sequelize);
 
 var app = express();
