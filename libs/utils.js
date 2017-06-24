@@ -550,7 +550,24 @@ module.exports = function (nodemailer) {
             console.log(response);*/
             return response;
         },
-        sendMail: function (to, subject, message, from, attachments, callback) {
+        getMailTemplate: function (mail_name) {
+            var templateContent = require("fs").readFileSync(mail_name).toString();
+            return templateContent;
+        },
+        sendMail: function (to, subject, message, from, attachments, data, callback) {
+            if (data) {
+                var vars = Object.keys(data);
+                for (var i = 0; i < vars.length; i++) {
+                    var key = vars[i];
+                    var value = data[key];
+                    var exp = new RegExp(key, 'g');
+                    subject = subject.replace(exp, value);
+                    message = message.replace(exp, value);
+                }
+            }
+
+            message = message.replace(/\r\n|\r|\n/g, '<br />');
+
             var transporter = nodemailer.createTransport({
                 service: 'Gmail',
                 auth: {

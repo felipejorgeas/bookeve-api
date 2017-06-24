@@ -1,4 +1,4 @@
-module.exports = function (sequelize, models, Utils) {
+module.exports = function (sequelize, models, Utils, Mails) {
     var EventsUsers = {
         insert: function (req, res) {
             var event = req.body.event;
@@ -11,8 +11,12 @@ module.exports = function (sequelize, models, Utils) {
                 where: data
             };
             models.EventsUsers.findOne(where).then(function (inscricao) {
-                var message = '<p><b>Inscrição confirmada</b></p>';
-                var subject = 'Inscrição confirmada';
+                var message = Utils.getMailTemplate(Mails.EVENTO_INSCRICAO_CONFIRMACAO);
+                var subject = 'Inscrição confirmada no evento "event_name"';
+                var to = 'felipejorgeas@gmail.com';
+                var data_mail = {};
+                data_mail.event_name = 'Evento de Teste';
+                data_mail.user_name = 'Felipe Jorge';
                 if (inscricao) {
                     var update = {
                         deleted: 0
@@ -20,7 +24,7 @@ module.exports = function (sequelize, models, Utils) {
                     models.EventsUsers.update(update, where).then(function (result) {
                         if (result) {
                             models.EventsUsers.findOne(where).then(function (inscricao) {
-                                Utils.sendMail('felipejorgeas@gmail.com', subject, message, null, null);
+                                Utils.sendMail(to, subject, message, null, null, data_mail);
                                 res.send(Utils.setResponse(200, inscricao));
                             });
                         } else {
@@ -31,7 +35,7 @@ module.exports = function (sequelize, models, Utils) {
                     models.EventsUsers.create(data).then(function (result) {
                         var data = result.dataValues;
                         if (data) {
-                            Utils.sendMail('felipejorgeas@gmail.com', subject, message, null, null);
+                            Utils.sendMail(to, subject, message, null, null, data_mail);
                             res.send(Utils.setResponse(200, data));
                         } else {
                             throw 'Não foi possível se inscrever neste evento';
@@ -58,9 +62,13 @@ module.exports = function (sequelize, models, Utils) {
                     models.EventsUsers.update(update, where).then(function (result) {
                         if (result) {
                             models.EventsUsers.findOne(where).then(function (inscricao) {
-                                var message = '<p><b>Inscrição cancelada</b></p>';
-                                var subject = 'Inscrição cancelada';
-                                Utils.sendMail('felipejorgeas@gmail.com', subject, message, null, null);
+                                var message = Utils.getMailTemplate(Mails.EVENTO_INSCRICAO_CANCELAMENTO);
+                                var subject = 'Inscrição cancelada para o evento "event_name"';
+                                var to = 'felipejorgeas@gmail.com';
+                                var data_mail = {};
+                                data_mail.event_name = 'Evento de Teste';
+                                data_mail.user_name = 'Felipe Jorge';
+                                Utils.sendMail(to, subject, message, null, null, data_mail);
                                 res.send(Utils.setResponse(200, inscricao));
                             });
                         } else {

@@ -163,7 +163,7 @@ CREATE TABLE `eventsUsers` (
   KEY `eventId` (`eventId`),
   CONSTRAINT `eventsUsers_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `eventsUsers_ibfk_2` FOREIGN KEY (`eventId`) REFERENCES `events` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -172,7 +172,7 @@ CREATE TABLE `eventsUsers` (
 
 LOCK TABLES `eventsUsers` WRITE;
 /*!40000 ALTER TABLE `eventsUsers` DISABLE KEYS */;
-INSERT INTO `eventsUsers` VALUES (1,1,'2017-06-18 20:55:05','2017-06-18 23:26:33',1,2),(3,0,'2017-06-18 21:27:56','2017-06-18 21:27:56',1,1);
+INSERT INTO `eventsUsers` VALUES (1,1,'2017-06-18 20:55:05','2017-06-18 23:26:33',1,2),(3,1,'2017-06-18 21:27:56','2017-06-24 21:53:26',1,1),(4,0,'2017-06-24 18:25:51','2017-06-24 18:25:51',2,2),(5,0,'2017-06-24 21:56:55','2017-06-24 21:56:55',2,1);
 /*!40000 ALTER TABLE `eventsUsers` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -232,7 +232,7 @@ CREATE TABLE `users` (
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -241,7 +241,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'Felipe Jorge','masculino','felipejorgeas@gmail.com','31993586504','Praça Raul Soares','89','apto 802','Centro','Belo Horizonte','MG',30180030,'participante','6c44e5cd17f0019c64b042e4a745412a',1,0,'2017-06-18 15:48:05','2017-06-18 15:49:20');
+INSERT INTO `users` VALUES (1,'Felipe Jorge','masculino','felipejorgeas@gmail.com','31993586504','Praça Raul Soares','89','apto 802','Centro','Belo Horizonte','MG',30180030,'administrador','6c44e5cd17f0019c64b042e4a745412a',1,0,'2017-06-18 15:48:05','2017-06-18 15:49:20'),(2,'Paulo Souza','masculino','paulosouza@email.com','31993586504','Praça Raul Soares','89','apto 802','Centro','Belo Horizonte','MG',30180030,'participante','6c44e5cd17f0019c64b042e4a745412a',1,0,'2017-06-24 18:25:38','2017-06-24 18:26:33');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -254,4 +254,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-06-19  0:39:28
+-- Dump completed on 2017-06-24 19:08:22

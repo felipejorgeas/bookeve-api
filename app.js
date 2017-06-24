@@ -5,7 +5,8 @@ var express = require('express')
     , async = require('async')
     , nodemailer = require('nodemailer')
     , dbData = require(__dirname + '/config/db_data.js')
-    , Utils = require(__dirname + '/libs/utils.js')(nodemailer)
+    , Mails = require(__dirname + '/libs/mails.js')
+    , Utils = require(__dirname + '/libs/utils.js')(nodemailer, Mails)
     , conn = require(__dirname + '/db.js')(dbData, Sequelize);
 
 var app = express();
@@ -15,12 +16,12 @@ conn.connect(function (db) {
     if (!db.isConnected) {
         console.log(db.error);
     } else {
-        var routes = require(__dirname + '/routes.js')(db.sequelize, db.models, Utils, async);
+        var routes = require(__dirname + '/routes.js')(db.sequelize, db.models, Utils, async, Mails);
 
         app.use(bodyParser.json({ limit: '50mb' }));
         app.use(bodyParser.urlencoded({ extended: true }));
         app.use(compression());
-        app.use(api + '/banners', express.static(__dirname + '/banners'));
+        app.use(api + '/events_content', express.static(__dirname + '/events_content'));
         app.use(function (req, res, next) {
             res.header('Access-Control-Allow-Origin', '*');
             res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
@@ -73,6 +74,11 @@ conn.connect(function (db) {
         app.get(api + '/eventsUsers/event/:eventId/user/:userId', routes.eventsUsers.find);
         app.post(api + '/eventsUsers', routes.eventsUsers.insert);
         app.delete(api + '/eventsUsers/:id', routes.eventsUsers.remove);
+
+        /**
+         * Rotas para comunicados.
+         */
+        app.post(api + '/comunicates', routes.comunicates.send);
 
         app.listen('5555', function () {
             console.log('Servidor escutando na porta 5555.');
