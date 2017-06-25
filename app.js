@@ -4,10 +4,14 @@ var express = require('express')
     , Sequelize = require('sequelize')
     , async = require('async')
     , nodemailer = require('nodemailer')
+    , htmlToPdf = require('html-to-pdf')
     , dbData = require(__dirname + '/config/db_data.js')
     , Mails = require(__dirname + '/libs/mails.js')
-    , Utils = require(__dirname + '/libs/utils.js')(nodemailer, Mails)
     , conn = require(__dirname + '/db.js')(dbData, Sequelize);
+
+htmlToPdf.setInputEncoding('UTF-8');
+htmlToPdf.setOutputEncoding('UTF-8');
+var Utils = require(__dirname + '/libs/utils.js')(nodemailer, htmlToPdf);
 
 var app = express();
 var api = '/bookeve-api';
@@ -50,6 +54,7 @@ conn.connect(function (db) {
          */
         app.get(api + '/events', routes.events.get);
         app.get(api + '/events/:id', routes.events.getOne);
+        app.get(api + '/events/:id/list', routes.events.getEventUsersList);
         app.post(api + '/events', routes.events.insert);
         app.put(api + '/events/:id', routes.events.update);
         app.delete(api + '/events/:id', routes.events.remove);

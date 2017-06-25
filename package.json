@@ -15,6 +15,7 @@
     "body-parser": "^1.15.0",
     "compression": "^1.6.2",
     "express": "^4.13.4",
+    "html-to-pdf": "^0.1.11",
     "mysql": "^2.11.1",
     "nodemailer": "^4.0.1",
     "sequelize": "^3.23.6"

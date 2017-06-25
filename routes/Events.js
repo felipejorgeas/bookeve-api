@@ -1,4 +1,4 @@
-module.exports = function (sequelize, models, Utils, async) {
+module.exports = function (sequelize, models, Utils, async, Mails) {
     var Events = {
         evento: null,
         insert: function (req, res) {
@@ -218,6 +218,76 @@ module.exports = function (sequelize, models, Utils, async) {
                             });
                         } else {
                             throw 'Não foi possível excluir o evento!';
+                        }
+                    });
+                } else {
+                    throw 'Evento não encontrado!';
+                }
+            }).catch(function (err) {
+                res.send(Utils.setResponse(err));
+            });
+        },
+        getEventUsersList: function (req, res) {
+            var params = req.params;
+            var options = {
+                where: {
+                    id: params.id
+                }
+            };
+            models.Events.findOne(options).then(function (evento) {
+                if (evento) {
+                    evento = evento.dataValues;
+                    var options = {
+                        include: {
+                            model: models.Events,
+                            where: {
+                                id: evento.id
+                            },
+                            through: {
+                                where:
+                                {
+                                    deleted: 0
+                                }
+                            }
+                        }
+                    }
+                    models.Users.findAll(options).then(function (users) {
+                        if (users) {
+                            // obtem o template do email de comunicados.
+                            var template = Utils.getMailTemplate(Mails.EVENTO_PARTICIPANTES_LIST);
+                            var filename = 'inscritos.pdf';
+                            var destination = Utils.sprintf('./events_content/%s/%s', evento.id, filename);
+                            var data_vars = {};
+                            // seta os dados do evento.
+                            data_vars.event_name = evento.name;
+                            data_vars.event_address = Utils.sprintf('%s, %s %s, %s<br/>%s-%s - Cep: %s', evento.address, evento.number, evento.complement, evento.neighborhood, evento.city, evento.state, evento.zip);
+                            var dateIni = {
+                                date: (Utils.getDateFormat(evento.dateIni.toString())).split(' ')[0],
+                                hour: (Utils.getDateFormat(evento.dateIni.toString())).split(' ')[1]
+                            };
+                            var dateFin = {
+                                date: (Utils.getDateFormat(evento.dateFin)).split(' ')[0],
+                                hour: (Utils.getDateFormat(evento.dateFin)).split(' ')[1]
+                            };
+                            data_vars.event_time = Utils.sprintf('dàs %s do dia %s até às %s do dia %s', dateIni.hour, dateIni.date, dateFin.hour, dateFin.date);
+                            // monta uma linha na lista para cada participante.
+                            var tr_users = '';
+                            users.forEach(function (user) {
+                                tr_users += Utils.sprintf('<tr><td>%s</td><td>&nbsp;</td></tr>', user.name);
+                            });
+                            data_vars.tr_users = tr_users;
+                            template = Utils.replaceVars(template, data_vars);
+                            Utils.generatePdf(template, destination, false, function (err, result) {
+                                if (err) {
+                                    res.send(Utils.setResponse(err));
+                                } else {
+                                    var data = {
+                                        eventId: evento.id,
+                                        filename: filename
+                                    };
+                                    res.send(Utils.setResponse(200, data));
+                                }
+                            });
                         }
                     });
                 } else {

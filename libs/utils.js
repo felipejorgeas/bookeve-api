@@ -1,4 +1,4 @@
-module.exports = function (nodemailer) {
+module.exports = function (nodemailer, htmlToPdf) {
     var Utils = {
         timeResponse: {
             timei: 0,
@@ -500,6 +500,29 @@ module.exports = function (nodemailer) {
 
             return ret;
         },
+        getDateFormat: function (date) {
+            date = new Date(date);
+            var year = date.getFullYear();
+            var month = date.getMonth() + 1;
+            var day = date.getDate();
+            if (month < 10) {
+                month = '0' + month;
+            }
+            if (day < 10) {
+                day = '0' + day;
+            }
+            var hours = date.getHours();
+            var minutes = date.getMinutes();
+            if (hours < 10) {
+                hours = '0' + hours;
+            }
+            if (minutes < 10) {
+                minutes = '0' + minutes;
+            }
+            hour = hours + ':' + minutes;
+            var dateFormat = day + '/' + month + '/' + year + ' ' + hour;
+            return dateFormat;
+        },
         getUrlFriendlyString: function (str) {
             var from = 'ŠŒŽšœžŸ¥µÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýÿ';
             var to = 'SOZsozYYuAAAAAAACEEEEIIIIDNOOOOOOUUUUYsaaaaaaaceeeeiiiionoooooouuuuyy';
@@ -546,9 +569,31 @@ module.exports = function (nodemailer) {
                     response.status = 0;
                     response.message = error;
             }
-            /*console.log('');
-            console.log(response);*/
             return response;
+        },
+        replaceVars: function (content, data, enterToBr) {
+            var vars = Object.keys(data);
+            for (var i = 0; i < vars.length; i++) {
+                var key = vars[i];
+                var value = data[key];
+                var exp = new RegExp(key, 'g');
+                content = content.replace(exp, value);
+            }
+            if (enterToBr) {
+                content = content.replace(/\r\n|\r|\n/g, '<br />');
+            }
+            return content;
+        },
+        generatePdf: function (content, destination, isFile, callback) {
+            if (isFile) {
+                htmlToPdf.convertHTMLFile(content, destination, function (err, result) {
+                    callback(err, result);
+                });
+            } else {
+                htmlToPdf.convertHTMLString(content, destination, function (err, result) {
+                    callback(err, result);
+                });
+            }
         },
         getMailTemplate: function (mail_name) {
             var templateContent = require("fs").readFileSync(mail_name).toString();
@@ -556,18 +601,9 @@ module.exports = function (nodemailer) {
         },
         sendMail: function (to, subject, message, from, attachments, data, callback) {
             if (data) {
-                var vars = Object.keys(data);
-                for (var i = 0; i < vars.length; i++) {
-                    var key = vars[i];
-                    var value = data[key];
-                    var exp = new RegExp(key, 'g');
-                    subject = subject.replace(exp, value);
-                    message = message.replace(exp, value);
-                }
+                subject = Utils.replaceVars(subject, data);
+                message = Utils.replaceVars(message, data, true);
             }
-
-            message = message.replace(/\r\n|\r|\n/g, '<br />');
-
             var transporter = nodemailer.createTransport({
                 service: 'Gmail',
                 auth: {
