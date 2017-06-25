@@ -153,6 +153,7 @@ DROP TABLE IF EXISTS `eventsUsers`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `eventsUsers` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `participated` int(11) NOT NULL DEFAULT '0',
   `deleted` int(11) NOT NULL DEFAULT '0',
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL,
@@ -163,7 +164,7 @@ CREATE TABLE `eventsUsers` (
   KEY `eventId` (`eventId`),
   CONSTRAINT `eventsUsers_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `eventsUsers_ibfk_2` FOREIGN KEY (`eventId`) REFERENCES `events` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -172,7 +173,7 @@ CREATE TABLE `eventsUsers` (
 
 LOCK TABLES `eventsUsers` WRITE;
 /*!40000 ALTER TABLE `eventsUsers` DISABLE KEYS */;
-INSERT INTO `eventsUsers` VALUES (1,0,'2017-06-18 20:55:05','2017-06-18 23:26:33',1,2),(3,0,'2017-06-18 21:27:56','2017-06-25 02:30:38',1,1),(4,0,'2017-06-24 18:25:51','2017-06-24 18:25:51',2,2),(5,0,'2017-06-24 21:56:55','2017-06-24 21:56:55',2,1);
+INSERT INTO `eventsUsers` VALUES (1,1,0,'2017-06-25 18:11:00','2017-06-25 18:11:00',1,2),(2,1,0,'2017-06-25 18:11:00','2017-06-25 18:11:00',2,2);
 /*!40000 ALTER TABLE `eventsUsers` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -254,4 +255,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-06-24 23:43:26
+-- Dump completed on 2017-06-25 17:11:20

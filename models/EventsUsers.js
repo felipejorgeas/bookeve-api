@@ -5,6 +5,11 @@ module.exports = function (sequelize, DataTypes) {
             primaryKey: true,
             autoIncrement: true
         },
+        participated: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            defaultValue: 0
+        },
         deleted: {
             type: DataTypes.INTEGER,
             allowNull: false,

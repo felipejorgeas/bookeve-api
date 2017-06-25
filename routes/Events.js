@@ -84,7 +84,7 @@ module.exports = function (sequelize, models, Utils, async, Mails) {
             var event = {
                 id: params.id
             };
-            var where = {
+            var options = {
                 where: event
             };
             dataUpdate.dateIni = new Date(dataUpdate.dateIni);
@@ -97,12 +97,12 @@ module.exports = function (sequelize, models, Utils, async, Mails) {
                 }
             }
             var update = dataUpdate;
-            models.Events.findOne(where).then(function (data) {
+            models.Events.findOne(options).then(function (data) {
                 if (data) {
                     data = data.dataValues;
                     models.Events.update(update, where).then(function (result) {
                         if (result) {
-                            models.Events.findOne(where).then(function (evento) {
+                            models.Events.findOne(options).then(function (evento) {
                                 if (dataUpdate.image) {
                                     Events.evento = dataUpdate;
                                     Events.evento.id = evento.id;
@@ -123,10 +123,10 @@ module.exports = function (sequelize, models, Utils, async, Mails) {
         },
         get: function (req, res) {
             var queryString = req.query;
-            var where = {
+            var options = {
                 where: (queryString ? queryString : {})
             };
-            models.Events.findAll(where).then(function (eventos) {
+            models.Events.findAll(options).then(function (eventos) {
                 if (eventos) {
                     res.send(Utils.setResponse(200, eventos));
                 } else {
@@ -138,23 +138,25 @@ module.exports = function (sequelize, models, Utils, async, Mails) {
         },
         getOne: function (req, res) {
             var params = req.params;
-            var where = {
+            var options = {
                 where: {
                     id: params.id
                 }
             };
-            models.Events.findOne(where).then(function (evento) {
+            models.Events.findOne(options).then(function (evento) {
                 if (evento) {
                     evento = evento.dataValues;
                     Events.evento = evento;
                     async.parallel({
                         organizer: Events.getEventOrganizer,
                         lecturers: Events.getEventLecturers,
-                        videos: Events.getEventVideos
+                        videos: Events.getEventVideos,
+                        users: Events.getEventUsers
                     }, function (err, result) {
                         evento.organizer = result.organizer;
                         evento.lecturers = result.lecturers;
                         evento.videos = result.videos;
+                        evento.users = result.users;
                         res.send(Utils.setResponse(200, evento));
                     });
                 } else {
@@ -165,12 +167,12 @@ module.exports = function (sequelize, models, Utils, async, Mails) {
             });
         },
         getEventOrganizer: function (callback) {
-            var where = {
+            var options = {
                 where: {
                     id: Events.evento.userId
                 }
             };
-            models.Users.findOne(where).then(function (user) {
+            models.Users.findOne(options).then(function (user) {
                 var organizador = {
                     name: user.name,
                     email: user.email
@@ -179,23 +181,45 @@ module.exports = function (sequelize, models, Utils, async, Mails) {
             });
         },
         getEventLecturers: function (callback) {
-            var where = {
+            var options = {
                 where: {
                     eventId: Events.evento.id
                 }
             };
-            models.EventsLecturers.findAll(where).then(function (lecturers) {
+            models.EventsLecturers.findAll(options).then(function (lecturers) {
                 callback(null, lecturers);
             });
         },
         getEventVideos: function (callback) {
-            var where = {
+            var options = {
                 where: {
                     eventId: Events.evento.id
                 }
             };
-            models.EventsVideos.findAll(where).then(function (videos) {
+            models.EventsVideos.findAll(options).then(function (videos) {
                 callback(null, videos);
+            });
+        },
+        getEventUsers: function (callback) {
+            var options = {
+                include: {
+                    model: models.Events,
+                    where: {
+                        id: Events.evento.id
+                    },
+                    through: {
+                        where:
+                        {
+                            deleted: 0
+                        }
+                    }
+                },
+                order: [
+                    ['name', 'ASC']
+                ]
+            }
+            models.Users.findAll(options).then(function (users) {
+                callback(null, users);
             });
         },
         remove: function (req, res) {
@@ -203,17 +227,17 @@ module.exports = function (sequelize, models, Utils, async, Mails) {
             var event = {
                 id: params.id
             };
-            var where = {
+            var options = {
                 where: event
             };
             var update = {
                 deleted: 1
             };
-            models.Events.scope('eventsOk').findOne(where).then(function (evento) {
+            models.Events.scope('eventsOk').findOne(options).then(function (evento) {
                 if (evento) {
                     models.Events.update(update, where).then(function (result) {
                         if (result) {
-                            models.Events.findOne(where).then(function (evento) {
+                            models.Events.findOne(options).then(function (evento) {
                                 res.send(Utils.setResponse(200, evento));
                             });
                         } else {
@@ -248,7 +272,10 @@ module.exports = function (sequelize, models, Utils, async, Mails) {
                                 {
                                     deleted: 0
                                 }
-                            }
+                            },
+                            order: [
+                                ['name', 'ASC']
+                            ]
                         }
                     }
                     models.Users.findAll(options).then(function (users) {
@@ -292,6 +319,26 @@ module.exports = function (sequelize, models, Utils, async, Mails) {
                     });
                 } else {
                     throw 'Evento não encontrado!';
+                }
+            }).catch(function (err) {
+                res.send(Utils.setResponse(err));
+            });
+        },
+        saveParticipated: function (req, res) {
+            var eventId = req.params.id;
+            var users = req.body.users;
+            var data = users.map(function (eventUser) {
+                eventUser.eventId = eventId
+                return eventUser;
+            });
+            var options = {
+                updateOnDuplicate: ['participated']
+            };
+            models.EventsUsers.bulkCreate(data, options).then(function (result) {
+                if (result) {
+                    res.send(Utils.setResponse(200, result));
+                } else {
+                    throw 'Não foi possível atualizar os dados do evento!';
                 }
             }).catch(function (err) {
                 res.send(Utils.setResponse(err));
