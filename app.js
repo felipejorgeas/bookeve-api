@@ -55,6 +55,8 @@ conn.connect(function (db) {
         app.get(api + '/events', routes.events.get);
         app.get(api + '/events/:id', routes.events.getOne);
         app.get(api + '/events/:id/participesList', routes.events.getEventUsersList);
+        app.get(api + '/events/:id/participesCrachas', routes.events.getEventUsersCrachas);
+        app.get(api + '/events/:id/participesCertificates', routes.events.getEventUsersCertificates);
         app.post(api + '/events', routes.events.insert);
         app.put(api + '/events/:id', routes.events.update);
         app.put(api + '/events/:id/participated', routes.events.saveParticipated);

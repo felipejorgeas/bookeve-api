@@ -156,7 +156,12 @@ module.exports = function (sequelize, models, Utils, async, Mails) {
                         evento.organizer = result.organizer;
                         evento.lecturers = result.lecturers;
                         evento.videos = result.videos;
-                        evento.users = result.users;
+                        var users = result.users;
+                        users = users.map(function (user) {
+                            user.Events[0].EventsUsers.participated = user.Events[0].EventsUsers.participated ? true : false;
+                            return user;
+                        });
+                        evento.users = users;
                         res.send(Utils.setResponse(200, evento));
                     });
                 } else {
@@ -339,6 +344,157 @@ module.exports = function (sequelize, models, Utils, async, Mails) {
                     res.send(Utils.setResponse(200, result));
                 } else {
                     throw 'Não foi possível atualizar os dados do evento!';
+                }
+            }).catch(function (err) {
+                res.send(Utils.setResponse(err));
+            });
+        },
+        getEventUsersCrachas: function (req, res) {
+            var params = req.params;
+            var options = {
+                where: {
+                    id: params.id
+                }
+            };
+            models.Events.findOne(options).then(function (evento) {
+                if (evento) {
+                    evento = evento.dataValues;
+                    var options = {
+                        include: {
+                            model: models.Events,
+                            where: {
+                                id: evento.id
+                            },
+                            through: {
+                                where:
+                                {
+                                    deleted: 0
+                                }
+                            },
+                            order: [
+                                ['name', 'ASC']
+                            ]
+                        }
+                    }
+                    models.Users.findAll(options).then(function (users) {
+                        if (users) {
+                            // obtem o template do email de comunicados.
+                            var template = Utils.getMailTemplate(Mails.EVENTO_PARTICIPANTES_CRACHAS);
+                            var filename = 'crachas.html';
+                            var destination = Utils.sprintf('./events_content/%s/%s', evento.id, filename);
+                            var data_vars = {};
+                            var crachas = '';
+                            users.forEach(function (user, i) {
+                                if (i > 0 && i % 6 == 0) {
+                                    crachas += `
+                                    <div style="page-break-after: always;"></div>
+                                    `;
+                                }
+                                var type = user.accessLevel;
+                                crachas += Utils.sprintf(`<div class="cracha border">
+                                                            <div class="circle left"></div>
+                                                            <div class="circle right"></div>
+                                                            <div id="logo">
+                                                                <p><img style=" width: 40px; height: 40px;" src="http://localhost:3000/img/logo.png" /></p>
+                                                                <p class="logoname">Bookeve</p>
+                                                            </div>
+                                                            <div class="info">
+                                                                <h2 class="title">%s</h2>
+                                                                <h3 class="user-type %s">%s</h3>
+                                                                <h4 class="user-name">%s</h4>
+                                                                <p class="footer">Bookeve - Tudo em eventos</p>
+                                                            </div>
+                                                        </div>`, evento.name, type, type, user.name);
+                            });
+                            data_vars.crachas = crachas;
+                            template = Utils.replaceVars(template, data_vars);
+                            Utils.generateHtml(template, destination, function (err) {
+                                if (err) {
+                                    res.send(Utils.setResponse(err));
+                                } else {
+                                    var data = {
+                                        eventId: evento.id,
+                                        filename: filename
+                                    };
+                                    res.send(Utils.setResponse(200, data));
+                                }
+                            });
+                        }
+                    });
+                } else {
+                    throw 'Evento não encontrado!';
+                }
+            }).catch(function (err) {
+                res.send(Utils.setResponse(err));
+            });
+        },
+        getEventUsersCertificates: function (req, res) {
+            var params = req.params;
+            var options = {
+                where: {
+                    id: params.id
+                }
+            };
+            models.Events.findOne(options).then(function (evento) {
+                if (evento) {
+                    evento = evento.dataValues;
+                    var options = {
+                        include: {
+                            model: models.Events,
+                            where: {
+                                id: evento.id
+                            },
+                            through: {
+                                where:
+                                {
+                                    deleted: 0,
+                                    participated: 1
+                                }
+                            },
+                            order: [
+                                ['name', 'ASC']
+                            ]
+                        }
+                    }
+                    models.Users.findAll(options).then(function (users) {
+                        if (users) {
+                            // obtem o template do email de comunicados.
+                            var template = Utils.getMailTemplate(Mails.EVENTO_PARTICIPANTES_CERTIFICADOS);
+                            var filename = 'certificados.html';
+                            var destination = Utils.sprintf('./events_content/%s/%s', evento.id, filename);
+                            var data_vars = {};
+                            var date = Utils.getDateFormat(evento.dateIni).split(' ')[0];
+                            var city = Utils.sprintf('%s-%s', evento.city, evento.state);
+                            var certificados = '';
+                            users.forEach(function (user, i) {
+                                certificados += Utils.sprintf(`<div class="certificado">
+                                                                <p class="title-g">CERTIFICADO</p>
+                                                                <h1 class="title">%s</h1>
+                                                                <div class="content">
+                                                                    Certificamos que o(a) participante <strong>%s</strong> esteve presente no evento
+                                                                    "%s".
+                                                                </div>
+                                                                <p class="date">%s, %s</p>
+                                                            </div>
+                                                            <div style="page-break-after: always;"></div>`, evento.name, user.name, evento.name, city, date);
+                            });
+                            data_vars.certificates = certificados;
+                            template = Utils.replaceVars(template, data_vars);
+                            Utils.generateHtml(template, destination, function (err) {
+                                if (err) {
+                                    res.send(Utils.setResponse(err));
+                                } else {
+                                    var data = {
+                                        eventId: evento.id,
+                                        filename: filename
+                                    };
+                                    res.send(Utils.setResponse(200, data));
+                                }
+                            });
+                        }
+                    });
+                } else {
+                    throw 'Evento não encontrado!';
                 }
             }).catch(function (err) {
                 res.send(Utils.setResponse(err));

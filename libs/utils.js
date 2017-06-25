@@ -584,6 +584,12 @@ module.exports = function (nodemailer, htmlToPdf) {
             }
             return content;
         },
+        generateHtml: function (content, destination, callback) {
+            require("fs").writeFile(destination, content, function (err) {
+                console.log(err);
+                callback(err);
+            });
+        },
         generatePdf: function (content, destination, isFile, callback) {
             if (isFile) {
                 htmlToPdf.convertHTMLFile(content, destination, function (err, result) {
