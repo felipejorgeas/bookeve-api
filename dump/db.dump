@@ -73,7 +73,7 @@ CREATE TABLE `events` (
   PRIMARY KEY (`id`),
   KEY `userId` (`userId`),
   CONSTRAINT `events_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -82,7 +82,7 @@ CREATE TABLE `events` (
 
 LOCK TABLES `events` WRITE;
 /*!40000 ALTER TABLE `events` DISABLE KEYS */;
-INSERT INTO `events` VALUES (1,'asdf asdf a','asdasf asdf','banner.png','2017-05-28 15:00:00','2017-05-28 21:00:00',121,'Praça Raul Soares','89','apto 802','Centro','Belo Horizonte','MG',30180030,1,0,'2017-05-28 17:10:58','2017-06-18 23:37:16',1),(2,'Chatbots: o futuro dos apps.','O maior evento de chatbots do Brasil.','banner.jpg','2017-05-28 17:16:00','2017-05-28 17:16:00',100,'Praça Raul Soares','89','apto 802','Centro','Belo Horizonte','MG',30180030,1,0,'2017-05-28 17:16:37','2017-06-18 16:41:52',1),(27,'Varejo','54sa54das64d5a','banner.jpg','2017-05-28 18:59:31','2017-05-28 18:59:31',50,'Praça Raul Soares','89','','Centro','Belo Horizonte','MG',30180030,1,0,'2017-05-28 18:59:31','2017-05-29 03:35:29',1);
+INSERT INTO `events` VALUES (1,'asdf asdf a','asdasf asdf','banner.png','2017-05-28 15:00:00','2017-05-28 21:00:00',121,'Praça Raul Soares','89','apto 802','Centro','Belo Horizonte','MG',30180030,1,0,'2017-05-28 17:10:58','2017-06-18 23:37:16',1),(2,'Chatbots: o futuro dos apps.','O maior evento de chatbots do Brasil.','banner.jpg','2017-05-28 17:16:00','2017-05-28 17:16:00',100,'Praça Raul Soares','89','apto 802','Centro','Belo Horizonte','MG',30180030,1,0,'2017-05-28 17:16:37','2017-06-18 16:41:52',1),(27,'Varejo','54sa54das64d5a','banner.jpg','2017-05-28 18:59:31','2017-05-28 18:59:31',50,'Praça Raul Soares','89','','Centro','Belo Horizonte','MG',30180030,1,0,'2017-05-28 18:59:31','2017-05-29 03:35:29',1),(28,'Tecnologia ao seu alcance','Já na sua 3ª edição esse evento foi considerando o maior evento deste segmento no Brasil.\nNão fique fora dessa e venha fazer parte deste grande movimento você também.','banner.png','2017-07-09 15:00:00','2017-07-09 17:30:00',90,'Praça Raul Soares','100','','Centro','Belo Horizonte','MG',30180030,0,1,'2017-07-02 22:43:30','2017-07-02 22:56:18',3),(29,'Tecnologia ao seu alcance','Já na sua 3ª edição esse evento foi considerando o maior evento deste segmento no Brasil.\nNão fique fora dessa e venha fazer parte deste grande movimento você também.','banner.png','2017-07-09 15:00:00','2017-07-09 17:30:00',90,'Praça Raul Soares','100','','Centro','Belo Horizonte','MG',30180030,0,1,'2017-07-02 22:44:00','2017-07-02 22:58:06',3),(30,'Tecnologia ao seu alcance','Já na sua 3ª edição esse evento foi considerando o maior evento deste segmento no Brasil.\nNão fique fora dessa e venha fazer parte deste grande movimento você também.','banner.png','2017-07-09 15:00:00','2017-07-09 17:30:00',90,'Praça Raul Soares','100','','Centro','Belo Horizonte','MG',30180030,0,1,'2017-07-02 22:46:08','2017-07-02 22:58:09',3),(31,'Tecnologia ao seu alcance','Já na sua 3ª edição esse evento foi considerando o maior evento deste segmento no Brasil.\nNão fique fora dessa e venha fazer parte deste grande movimento você também.','banner.png','2017-07-09 15:00:00','2017-07-09 17:30:00',90,'Praça Raul Soares','100','','Centro','Belo Horizonte','MG',30180030,0,1,'2017-07-02 22:47:11','2017-07-02 22:58:13',3),(32,'Tecnologia ao seu alcance','Já na sua 3ª edição esse evento foi considerando o maior evento deste segmento no Brasil.\nNão fique fora dessa e venha fazer parte deste grande movimento você também.','banner.png','2017-07-09 15:00:00','2017-07-09 17:30:00',90,'Praça Raul Soares','100','','Centro','Belo Horizonte','MG',30180030,0,1,'2017-07-02 22:48:11','2017-07-02 23:01:35',3),(33,'Tecnologia ao seu alcance','Já na sua 3ª edição esse evento foi considerando o maior evento deste segmento no Brasil.\nNão fique fora dessa e venha fazer parte deste grande movimento você também.','banner.jpg','2017-07-01 15:00:00','2017-07-01 17:30:00',90,'Praça Raul Soares','100','','Centro','Belo Horizonte','MG',30180030,1,0,'2017-07-02 22:49:04','2017-07-03 01:23:42',3);
 /*!40000 ALTER TABLE `events` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -131,7 +131,7 @@ CREATE TABLE `eventsLecturers` (
   PRIMARY KEY (`id`),
   KEY `eventId` (`eventId`),
   CONSTRAINT `eventsLecturers_ibfk_1` FOREIGN KEY (`eventId`) REFERENCES `events` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -140,7 +140,7 @@ CREATE TABLE `eventsLecturers` (
 
 LOCK TABLES `eventsLecturers` WRITE;
 /*!40000 ALTER TABLE `eventsLecturers` DISABLE KEYS */;
-INSERT INTO `eventsLecturers` VALUES (10,'César','2017-05-28 18:17:05','2017-05-28 18:17:05',1),(11,'Paula da Silva','2017-05-28 18:17:47','2017-05-28 18:17:47',2),(12,'João Paulo','2017-05-28 18:17:55','2017-05-28 18:17:55',2),(13,'Felipe Jorge','2017-05-28 18:43:20','2017-05-28 18:43:20',NULL),(14,'Felipe Jorge','2017-05-28 18:44:10','2017-05-28 18:44:10',NULL),(15,'Felipe Jorge','2017-05-28 18:47:51','2017-05-28 18:47:51',NULL),(16,'Felipe Jorge','2017-05-28 18:48:09','2017-05-28 18:48:09',NULL),(17,'Felipe Jorge','2017-05-28 18:51:12','2017-05-28 18:51:12',NULL),(18,'Felipe Jorge','2017-05-28 18:51:34','2017-05-28 18:51:34',NULL),(19,'Felipe Jorge','2017-05-28 18:51:39','2017-05-28 18:51:39',NULL),(20,'Felipe Jorge','2017-05-28 18:56:07','2017-05-28 18:56:07',NULL),(21,'Felipe Jorge','2017-05-28 18:57:14','2017-05-28 18:57:14',NULL),(22,'Felipe Jorge','2017-05-28 18:58:21','2017-05-28 18:58:21',NULL),(23,'Paula','2017-06-18 23:37:06','2017-06-18 23:37:06',1);
+INSERT INTO `eventsLecturers` VALUES (10,'César','2017-05-28 18:17:05','2017-05-28 18:17:05',1),(11,'Paula da Silva','2017-05-28 18:17:47','2017-05-28 18:17:47',2),(12,'João Paulo','2017-05-28 18:17:55','2017-05-28 18:17:55',2),(13,'Felipe Jorge','2017-05-28 18:43:20','2017-05-28 18:43:20',NULL),(14,'Felipe Jorge','2017-05-28 18:44:10','2017-05-28 18:44:10',NULL),(15,'Felipe Jorge','2017-05-28 18:47:51','2017-05-28 18:47:51',NULL),(16,'Felipe Jorge','2017-05-28 18:48:09','2017-05-28 18:48:09',NULL),(17,'Felipe Jorge','2017-05-28 18:51:12','2017-05-28 18:51:12',NULL),(18,'Felipe Jorge','2017-05-28 18:51:34','2017-05-28 18:51:34',NULL),(19,'Felipe Jorge','2017-05-28 18:51:39','2017-05-28 18:51:39',NULL),(20,'Felipe Jorge','2017-05-28 18:56:07','2017-05-28 18:56:07',NULL),(21,'Felipe Jorge','2017-05-28 18:57:14','2017-05-28 18:57:14',NULL),(22,'Felipe Jorge','2017-05-28 18:58:21','2017-05-28 18:58:21',NULL),(23,'Paula','2017-06-18 23:37:06','2017-06-18 23:37:06',1),(24,'Thiago Pedrosa','2017-07-02 22:49:04','2017-07-02 22:49:04',33),(25,'Paulo de Souza','2017-07-02 22:49:04','2017-07-02 22:49:04',33),(26,'Camila Fonseca','2017-07-02 22:49:04','2017-07-02 22:49:04',33);
 /*!40000 ALTER TABLE `eventsLecturers` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -164,7 +164,7 @@ CREATE TABLE `eventsUsers` (
   KEY `eventId` (`eventId`),
   CONSTRAINT `eventsUsers_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `eventsUsers_ibfk_2` FOREIGN KEY (`eventId`) REFERENCES `events` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=61 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -173,7 +173,7 @@ CREATE TABLE `eventsUsers` (
 
 LOCK TABLES `eventsUsers` WRITE;
 /*!40000 ALTER TABLE `eventsUsers` DISABLE KEYS */;
-INSERT INTO `eventsUsers` VALUES (1,1,0,'2017-06-25 18:11:00','2017-06-25 18:11:00',1,2),(2,1,0,'2017-06-25 18:11:00','2017-06-25 18:11:00',2,2);
+INSERT INTO `eventsUsers` VALUES (1,1,0,'2017-06-25 18:11:00','2017-06-25 18:11:00',1,2),(2,1,0,'2017-06-25 18:11:00','2017-06-25 18:11:00',2,2),(3,0,0,'2017-07-03 00:32:48','2017-07-03 00:32:48',3,2),(4,1,0,'2017-07-03 01:22:23','2017-07-03 01:22:23',4,33);
 /*!40000 ALTER TABLE `eventsUsers` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -233,7 +233,7 @@ CREATE TABLE `users` (
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -242,7 +242,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'Felipe Jorge','masculino','felipejorgeas@gmail.com','31993586504','Praça Raul Soares','89','apto 802','Centro','Belo Horizonte','MG',30180030,'administrador','6c44e5cd17f0019c64b042e4a745412a',1,0,'2017-06-18 15:48:05','2017-06-18 15:49:20'),(2,'Paulo Souza','masculino','paulosouza@email.com','31993586504','Praça Raul Soares','89','apto 802','Centro','Belo Horizonte','MG',30180030,'participante','6c44e5cd17f0019c64b042e4a745412a',1,0,'2017-06-24 18:25:38','2017-06-24 18:26:33');
+INSERT INTO `users` VALUES (1,'Felipe Jorge','masculino','felipejorgeas@gmail.com','31993586504','Praça Raul Soares','89','apto 802','Centro','Belo Horizonte','MG',30180030,'administrador','6c44e5cd17f0019c64b042e4a745412a',1,0,'2017-06-18 15:48:05','2017-06-18 15:49:20'),(2,'Paulo Souza','masculino','paulosouza@email.com','31993586504','Praça Raul Soares','89','apto 802','Centro','Belo Horizonte','MG',30180030,'participante','6c44e5cd17f0019c64b042e4a745412a',1,0,'2017-06-24 18:25:38','2017-06-24 18:26:33'),(3,'César Filho','masculino','cesar@gmail.com','31993586504','Avenida Rio Bahia','17','','Centro','Catuji','MG',39816000,'organizador','6f597c1ddab467f7bf5498aad1b41899',1,0,'2017-07-02 20:51:08','2017-07-03 01:22:49'),(4,'Manoel Batista','masculino','manoel@gmail.com','','','','','','','',0,'participante','d5238ce9d8378a7315caee97b49a0ccf',1,0,'2017-07-03 01:22:14','2017-07-03 01:22:49');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -255,4 +255,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-06-25 20:10:54
+-- Dump completed on 2017-07-02 23:12:46

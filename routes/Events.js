@@ -23,6 +23,7 @@ module.exports = function (sequelize, models, Utils, async, Mails) {
                 if (evento) {
                     evento.lecturers = event.lecturers;
                     evento.videos = event.videos;
+                    evento.image = event.image;
                     Events.evento = evento;
                     async.parallel({
                         banner: Events.saveBanner,
@@ -35,6 +36,7 @@ module.exports = function (sequelize, models, Utils, async, Mails) {
                     throw 'Não foi possível cadastrar o evento';
                 }
             }).catch(function (err) {
+                console.log(err);
                 res.send(Utils.setResponse(err));
             });
         },
@@ -42,7 +44,7 @@ module.exports = function (sequelize, models, Utils, async, Mails) {
             var base64Data = Events.evento.image.replace(/^data:image\/png;base64,/, "");
             base64Data = base64Data.replace(/^data:image\/jpg;base64,/, "");
             base64Data = base64Data.replace(/^data:image\/jpeg;base64,/, "");
-            var dir = './banners/' + Events.evento.id;
+            var dir = './events_content/' + Events.evento.id;
             var filename = dir + '/' + Events.evento.banner;
             if (!require('fs').existsSync(dir)) {
                 require("fs").mkdirSync(dir);
@@ -100,7 +102,7 @@ module.exports = function (sequelize, models, Utils, async, Mails) {
             models.Events.findOne(options).then(function (data) {
                 if (data) {
                     data = data.dataValues;
-                    models.Events.update(update, where).then(function (result) {
+                    models.Events.update(update, options).then(function (result) {
                         if (result) {
                             models.Events.findOne(options).then(function (evento) {
                                 if (dataUpdate.image) {
@@ -123,18 +125,95 @@ module.exports = function (sequelize, models, Utils, async, Mails) {
         },
         get: function (req, res) {
             var queryString = req.query;
-            var options = {
-                where: (queryString ? queryString : {})
-            };
-            models.Events.findAll(options).then(function (eventos) {
-                if (eventos) {
-                    res.send(Utils.setResponse(200, eventos));
-                } else {
-                    res.send(Utils.setResponse(201));
-                }
-            }).catch(function (err) {
-                res.send(Utils.setResponse(err));
-            });
+
+            if (queryString.painel) {
+                var userId = queryString.userId;
+                delete queryString.painel;
+                delete queryString.userId;
+
+                models.Users.findOne({ where: { id: userId } }).then(function (user) {
+                    user = user.dataValues;
+                    if (user.accessLevel == 'participante') {
+                        var query = `SELECT 
+                                        events.* 
+                                    FROM 
+                                        events
+                                        INNER JOIN eventsUsers ON (eventsUsers.eventId = events.id AND
+                                                                eventsUsers.userId = :userId AND
+                                                                eventsUsers.deleted = 0)
+                                    WHERE
+                                        events.active = :active AND
+                                        events.deleted = :deleted`;
+                        sequelize.query(query, { replacements: { userId: user.id, active: 1, deleted: 0 }, type: sequelize.QueryTypes.SELECT })
+                        .then(function (eventos) {
+                            if (eventos) {
+                                res.send(Utils.setResponse(200, eventos));
+                            } else {
+                                res.send(Utils.setResponse(201));
+                            }
+                        }).catch(function (err) {
+                            console.log(err);
+                            res.send(Utils.setResponse(err));
+                        });
+                    } else if (user.accessLevel == 'organizador') {
+                        var query = `SELECT 
+                                        events.*
+                                    FROM 
+                                        events
+                                        LEFT JOIN eventsUsers ON (eventsUsers.eventId = events.id AND
+                                                                eventsUsers.deleted = 0)
+                                    WHERE
+                                        (
+                                            eventsUsers.userId = :userId AND 
+                                            events.active = :active AND
+                                            events.deleted = :deleted
+                                        ) OR (
+                                            events.userId = :userId AND
+                                            events.deleted = 0
+                                        )`;
+                        sequelize.query(query, { replacements: { userId: user.id, active: 1, deleted: 0 }, type: sequelize.QueryTypes.SELECT })
+                        .then(function (eventos) {
+                            if (eventos) {
+                                res.send(Utils.setResponse(200, eventos));
+                            } else {
+                                res.send(Utils.setResponse(201));
+                            }
+                        }).catch(function (err) {
+                            console.log(err);
+                            res.send(Utils.setResponse(err));
+                        });
+                    } else {
+                        var options = {
+                            where: (queryString ? queryString : {})
+                        };
+
+                        models.Events.findAll(options).then(function (eventos) {
+                            if (eventos) {
+                                res.send(Utils.setResponse(200, eventos));
+                            } else {
+                                res.send(Utils.setResponse(201));
+                            }
+                        }).catch(function (err) {
+                            res.send(Utils.setResponse(err));
+                        });
+                    }
+                });
+            } else {
+
+                var options = {
+                    where: (queryString ? queryString : {})
+                };
+
+                models.Events.findAll(options).then(function (eventos) {
+                    if (eventos) {
+                        res.send(Utils.setResponse(200, eventos));
+                    } else {
+                        res.send(Utils.setResponse(201));
+                    }
+                }).catch(function (err) {
+                    res.send(Utils.setResponse(err));
+                });
+            }
         },
         getOne: function (req, res) {
             var params = req.params;
@@ -240,7 +319,7 @@ module.exports = function (sequelize, models, Utils, async, Mails) {
             };
             models.Events.scope('eventsOk').findOne(options).then(function (evento) {
                 if (evento) {
-                    models.Events.update(update, where).then(function (result) {
+                    models.Events.update(update, options).then(function (result) {
                         if (result) {
                             models.Events.findOne(options).then(function (evento) {
                                 res.send(Utils.setResponse(200, evento));
@@ -253,6 +332,7 @@ module.exports = function (sequelize, models, Utils, async, Mails) {
                     throw 'Evento não encontrado!';
                 }
             }).catch(function (err) {
+                console.log(err);
                 res.send(Utils.setResponse(err));
             });
         },
@@ -395,7 +475,7 @@ module.exports = function (sequelize, models, Utils, async, Mails) {
                                                             <div class="circle left"></div>
                                                             <div class="circle right"></div>
                                                             <div id="logo">
-                                                                <p><img style=" width: 40px; height: 40px;" src="http://localhost:3000/img/logo.png" /></p>
+                                                                <p><img style=" width: 40px; height: 40px;" src="http://localhost:5555/bookeve-api/events_content/logo.png" /></p>
                                                                 <p class="logoname">Bookeve</p>
                                                             </div>
                                                             <div class="info">
@@ -430,11 +510,20 @@ module.exports = function (sequelize, models, Utils, async, Mails) {
         },
         getEventUsersCertificates: function (req, res) {
             var params = req.params;
+            var queryString = req.query;
             var options = {
                 where: {
                     id: params.id
                 }
             };
+            var through = {};
+            through.where = {
+                deleted: 0,
+                participated: 1
+            }
+            if(queryString.userId){
+                through.where.userId = queryString.userId;
+            }
             models.Events.findOne(options).then(function (evento) {
                 if (evento) {
                     evento = evento.dataValues;
@@ -444,20 +533,14 @@ module.exports = function (sequelize, models, Utils, async, Mails) {
                             where: {
                                 id: evento.id
                             },
-                            through: {
-                                where:
-                                {
-                                    deleted: 0,
-                                    participated: 1
-                                }
-                            },
+                            through: through,
                             order: [
                                 ['name', 'ASC']
                             ]
                         }
                     }
                     models.Users.findAll(options).then(function (users) {
-                        if (users) {
+                        if (users.length) {
                             // obtem o template do email de comunicados.
                             var template = Utils.getMailTemplate(Mails.EVENTO_PARTICIPANTES_CERTIFICADOS);
                             var filename = 'certificados.html';
@@ -491,7 +574,11 @@ module.exports = function (sequelize, models, Utils, async, Mails) {
                                     res.send(Utils.setResponse(200, data));
                                 }
                             });
+                        } else {
+                            throw 'Não há nenhum certificado para emitir!';
                         }
+                    }).catch(function (err) {
+                        res.send(Utils.setResponse(err));
                     });
                 } else {
                     throw 'Evento não encontrado!';

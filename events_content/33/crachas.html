@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <title>Bookeve</title>
+    <meta charset="UTF-8">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            font-family: Trebuchet MS, Lucida Grande, Lucida Sans Unicode, Lucida Sans, Tahoma, sans-serif;
+            color: #333;
+        }
+
+        body {
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .border {
+            border: 2px solid #333;
+        }
+
+        .footer {
+            border-top: 1px solid #333;
+            margin-top: 20px;
+            padding-top: 20px;
+            font-size: smaller;
+        }
+
+        #logo {
+            position: absolute;
+            transform: translate(-50%, 0);
+            left: 50%;
+        }
+
+        #logo p {
+            font-size: large;
+            color: #00ADEE;
+        }
+
+        .cracha {
+            position: relative;
+            width: 340px;
+            padding-top: 10px;
+            float: left;
+            margin: 5px;
+            border-radius: 5px;
+        }
+
+        .info {
+            padding: 20px 10px;
+            margin-top: 60px;
+        }
+
+        .user-type {
+            color: #FFF;
+            padding: 20px 5px;
+            margin: 20px 0;
+            background: #00ADEE;
+        }
+
+        .administrador {
+            background: #E0025E;
+        }
+
+        .circle {
+            width: 20px;
+            height: 20px;
+            border: 2px solid;
+            border-radius: 50%;
+            margin: 0 10px;
+        }
+
+        .left {
+            float: left;
+        }
+
+        .right {
+            float: right;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="cracha border">
+                                                            <div class="circle left"></div>
+                                                            <div class="circle right"></div>
+                                                            <div id="logo">
+                                                                <p><img style=" width: 40px; height: 40px;" src="http://localhost:5555/bookeve-api/events_content/logo.png" /></p>
+                                                                <p class="logoname">Bookeve</p>
+                                                            </div>
+                                                            <div class="info">
+                                                                <h2 class="title">Tecnologia ao seu alcance</h2>
+                                                                <h3 class="user-type participante">participante</h3>
+                                                                <h4 class="user-name">Manoel Batista</h4>
+                                                                <p class="footer">Bookeve - Tudo em eventos</p>
+                                                            </div>
+                                                        </div>
+    </div>
+
+</body>
+
+</html>
