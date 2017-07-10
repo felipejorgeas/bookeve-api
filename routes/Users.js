@@ -5,6 +5,7 @@ module.exports = function (sequelize, models, Utils) {
             var user = {
                 name: data.nome,
                 email: data.email,
+                accessLevel: data.accessLevel,
                 pswd: Utils.md5(data.senha)
             };
             models.Users.findOne({
